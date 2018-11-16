@@ -18,8 +18,8 @@ w_2 = np.random.normal()
 b = np.random.normal()
 
 
-learning_rate = 0.2
-iterations = 100
+learning_rate = 1
+iterations = 5
 
 for i in range(0,iterations):
     picked = np.random.randint(0,len(dataset))
@@ -28,10 +28,10 @@ for i in range(0,iterations):
 
     prediction = sigmoid(z)
 
-
+    print(w_1)
     cost = np.square(prediction-dataset[picked][2])
 
-    print(cost)
+    #print(cost)
     # Back propagation started on cost function all the way to the weighs that needs to be changed.
     d_cost_dpred = 2*(prediction-dataset[picked][2])
     d_pred_dz = sigmoid_prime(z)
@@ -47,7 +47,7 @@ for i in range(0,iterations):
     w_2 = w_2 - learning_rate * d_cost_dw2
     b = b - learning_rate * d_cost_db
 
-mystic_family = [2, 30090]
+mystic_family = [2, 7000]
 z = w_1 * mystic_family[0] + w_2 * mystic_family[1] + b
 pred = sigmoid(z)
 if (pred < 0.5):
