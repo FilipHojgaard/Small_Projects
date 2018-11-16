@@ -1,14 +1,22 @@
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Comment
 import requests
 
-page = requests.get("https://sn.dk/ringsted")
-# page = requests.get("https://www.cs.ucf.edu/~kstanley/neat.html")
+def fetchNews():
+    newsArray = []
 
-soup = BeautifulSoup(page.content, 'html.parser')
+    sn = requests.get("https://sn.dk/ringsted")
+    soupsn = BeautifulSoup(sn.content, 'lxml')
 
-# mydivs = soup.findAll("div", {"class": "list_news_container"})
-# mydivs = soup.find_all(class_="clear")
+    tableNum = 0
+    for tables in soupsn.find_all("table"):
+        for news in tables.find_all("a"):
+            if (tableNum == 1):
+                newsArray.append(news.get_text())
+        tableNum += 1
 
-print(soup)
+    return newsArray
 
-# print(soup.prettify())
+# RUN FOR TESTING
+newsArray = fetchNews()
+for i in newsArray:
+    print(i)
