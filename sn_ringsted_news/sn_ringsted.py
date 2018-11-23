@@ -4,45 +4,64 @@ import numpy as np
 import time
 import smtplib
 from email.parser import Parser
+import datetime
 
 def main():
     old_news = []
     while(True):
-        # time.sleep(28800)
-        time.sleep(3)
+        time.sleep(28800)
+        # time.sleep(1800) # half an hour
         old_news = eventTime(old_news)
 
 def eventTime(old_news):
     new_news = fetchNews()
     all_news = distinctNews(old_news, new_news)
-    sendMail(all_news)
+    parsedNews = parseNews(all_news)
+    sendMail(parsedNews)
+    print("\n *** Sent mail at: " + str(datetime.datetime.now()) + " *** \n")
+    print(parsedNews)
     return all_news
 
-def sendMail(news):
-    pass
-    mailText = ""
-    for i in news:
-        mailText = mailText + i + "\n"
-    print(mailText)
 
-    headers = Parser().parsestr('From: <senderadress587@gmail.com>\n'
-        'To: <nalp777@gmail.com>\n'
-        'Subject: sn.dk/ringsted nyheder\n'
-        'Content-Type: text/plain; charset=utf-8\n'
-        '\n'
-        +mailText+'\n')
+def parseNews(input):
+    parsedString = ""
+    for i in range(0,len(input)):
+        parsedString = parsedString + input[i] + " \n <br>"
+    return parsedString
+
+def sendMail(message):
+    tls = True
+    sender = "<senderadress587@gmail.com.com>"
+    to = "<nalp777@gmail.com.com>"
+    subject = "SN - RINGSTED NEWS SCRAPER"
+
+
+    headers = {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Content-Disposition': 'inline',
+        'Content-Transfer-Encoding': '8bit',
+        'From': sender,
+        'To': to,
+        'Date': datetime.datetime.now().strftime('%a, %d %b %Y  %H:%M:%S %Z'),
+        'X-Mailer': 'python',
+        'Subject': subject
+    }
+
+    msg = ''
+    for key, value in headers.items():
+        msg += "%s: %s\n" % (key, value)
+
+    msg += "\n%s\n"  % (message)
 
     receivers = ["nalp777@gmail.com"]
-
-
-    mail = smtplib.SMTP("smtp.gmail.com",587)
-    mail.ehlo()
-    mail.starttls()
-    mail.login("senderadress587@gmail.com", "hamsterne")
+    s = smtplib.SMTP("smtp.gmail.com",587)
+    s.ehlo()
+    s.starttls()
+    s.ehlo() # igen? måske vigtigt?
+    s.login("senderadress587@gmail.com", "hamsterne")
     for i in range(0,len(receivers)):
-        mail.sendmail("senderadress587@gmail.com", receivers[i], headers.as_string())
-
-    mail.close()
+        s.sendmail("senderadress587@gmail.com", receivers[i], msg.encode("utf8"))
+    s.close()
 
 
 def fetchNews():
