@@ -5,7 +5,7 @@ from pygame.locals import *
 # Average/mean is sum/len
 # Median is the middle point of a dataset
 # Mode is the most frequent data
-im = imageio.imread('pic.png')
+im = imageio.imread('yellow.png')
 
 # Finds the average color
 def averageColor(image):
