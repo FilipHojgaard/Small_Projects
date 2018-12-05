@@ -48,8 +48,16 @@ while(True):
     left_angle_text = myfont.render(str(left_angle)+u"\u00b0", False, (0,0,0))
     right_angle_text = myfont.render(str(right_angle)+u"\u00b0", False, (0,0,0))
 
+    # Calculate the length from boat to line between point_left and point_right.
+    length_to_boat = (((right_point[0]-left_point[0])*math.sin(math.radians(left_angle))
+    *math.sin(math.radians(right_angle)))/math.sin(math.radians(left_angle)+
+    math.radians(right_angle)))
+    length_to_boat = round(length_to_boat, 1)
+    length_to_boat_text = myfont.render(str(length_to_boat)+ " m", False, (0,0,0))
+
     windowsSurfaceObj.blit(left_angle_text,(left_point[0]-5,left_point[1]+8))
     windowsSurfaceObj.blit(right_angle_text,(right_point[0]-5,right_point[1]+8))
+    windowsSurfaceObj.blit(length_to_boat_text,(boat_coords[0],(boat_coords[1]+(length_to_boat/2))))
 
     keystate = pygame.key.get_pressed()
     if keystate[K_LEFT]:
