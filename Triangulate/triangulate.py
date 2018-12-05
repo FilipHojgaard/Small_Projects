@@ -30,15 +30,15 @@ def findAngle(x_1, y_1, x_2, y_2, fixed_x, fixed_y):
     angle = degrees(angle)
     return round(angle, 1)
 
-def drawLine(point_a, point_b, COLOR):
-    pygame.draw.line(windowsSurfaceObj, COLOR, point_a, point_b, 5)
+def drawLine(point_a, point_b, COLOR, thickness):
+    pygame.draw.line(windowsSurfaceObj, COLOR, point_a, point_b, thickness)
 
 
 while(True):
     windowsSurfaceObj.fill(bg_color)
-    drawLine(left_point, right_point, (0, 0, 255))  # Left point to right point
-    drawLine(left_point, boat_coords, (255, 0, 0))  # Left point to boat
-    drawLine(right_point, boat_coords, (255, 0, 0)) # Right point to boat
+    drawLine(left_point, right_point, (0, 0, 255), 5)  # Left point to right point
+    drawLine(left_point, boat_coords, (255, 0, 0), 5)  # Left point to boat
+    drawLine(right_point, boat_coords, (255, 0, 0), 5) # Right point to boat
     left_angle = findAngle(boat_coords[0], boat_coords[1],
     right_point[0], right_point[1], left_point[0], left_point[1])
     right_angle = findAngle(boat_coords[0], boat_coords[1],
@@ -55,9 +55,17 @@ while(True):
     length_to_boat = round(length_to_boat, 1)
     length_to_boat_text = myfont.render(str(length_to_boat)+ " m", False, (0,0,0))
 
+    tangent = math.tan(math.radians(left_angle))
+    adjecent = round((length_to_boat / tangent), 1)
+    adjecent_text = myfont.render(str(adjecent)+" m", False, (0,0,0))
+
+    drawLine(boat_coords, [left_point[0]+adjecent, left_point[1]], (150,150,150), 2)
+
     windowsSurfaceObj.blit(left_angle_text,(left_point[0]-5,left_point[1]+8))
     windowsSurfaceObj.blit(right_angle_text,(right_point[0]-5,right_point[1]+8))
     windowsSurfaceObj.blit(length_to_boat_text,(boat_coords[0],(boat_coords[1]+(length_to_boat/2))))
+    windowsSurfaceObj.blit(adjecent_text,(left_point[0]+(adjecent/2), left_point[1]-20))
+
 
     keystate = pygame.key.get_pressed()
     if keystate[K_LEFT]:
