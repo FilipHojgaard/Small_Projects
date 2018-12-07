@@ -10,7 +10,6 @@ def main():
     old_news = []
     while(True):
         time.sleep(28800)
-        # time.sleep(1800) # half an hour
         old_news = eventTime(old_news)
 
 def eventTime(old_news):
