@@ -1,4 +1,5 @@
 import random
+from operator import itemgetter # For sorting a list og list on a specific index in the inner list
 
 # CHROMOSONE ENCOTION / DECOTION MEANING:
 # 0 0 0 = 0
@@ -11,19 +12,23 @@ import random
 # 1 1 1 = 7
 
 # GOAL IS TO FIND SOLVE A ARITHMETIC EQUATION OF A*B+C = X.
-# GOAL: X = 23
+# GOAL: X = 24
 # FINTESS: Answer - Goal = Fitness
 
 def main():
     # VARIABLES
     goal = 24
-    population_amount = 2
+    population_amount = 4
     chromosone_length = 9
 
     # GENETIC ALGORITHM
-    population = create_population(population_amount, chromosone_length) # Number of chromosones, length of each chromosone
-    print(test_chromosone(population, goal))
-
+    population = create_population(population_amount, chromosone_length) # Creates a population of random chromosnes.
+    population = test_chromosone(population, goal) # Tests the population of chromosones and calculates a fitness score to each of them.
+    parent_1 = roulette_wheel_selection(population)     # Find 2 parents in population using roulette_wheel_selection
+    parent_2 = roulette_wheel_selection(population)
+    print("PARENTS:")
+    print(parent_1)
+    print(parent_2)
 
 
 # Using the "random_chromosone" helping function. This function creates a population of 'amount' random chromosones with each being 'chromosone_length' long.
@@ -44,19 +49,64 @@ def random_chromosone(chromosone_length):
             chromosone.append(0)
     return(chromosone)
 
+def roulette_wheel_selection(population):
+    fitness_sum = 0
+    parent = []                                         # Allocate memory to a parent chromosone
+    for i in range(0,len(population)):                  # Calculate a fitness sum from the whole population
+        fitness_sum += population[i][-1]
+    print("fitness sum: " +str(fitness_sum))
+    fixed_point = random.randint(0,fitness_sum)         # Generate a random fixed_point from 0 to the fitness sum
+    print("Random fixed point: " + str(fixed_point))
+    partial_sum = 0                                     # Partial sum is added up. When this exceeds the threshold, fixed_point, we choose the current chromosone as a parent.
+    for i in range(0,len(population)):
+        # If the partial_sum exceeds the fitness_sum. (Because the fixed_point is too close to fitness_sum, and is incremented too much)
+        if(partial_sum >= fitness_sum):
+            parent = population[i-1]
+            population.pop(i-1)
+            break
+        # When the threshold is found normally
+        elif(partial_sum >= fixed_point):
+            parent = population[i]                      # Sets parent to be the winner
+            population.pop(i)                           # Removes the parent frmo the population, so the same parent cant be choosen again.
+            break
+        else:
+            partial_sum += population[i][-1]
+    return parent
+
+
+
+
+
 def test_chromosone(population, goal):
     for i in range(0, len(population)):
         print(population[i])
-        A = decode(population[i][0:3])
+        A = decode(population[i][0:3])          # Find the decoded value of the first 3 bits of the chromosones
         B = decode(population[i][3:6])
         C = decode(population[i][6:9])
         print(A,B,C)
-        guess = A*B+C
+        guess = A*B+C                           # Calcuate the guess frmo the decoded chromosone information
         print("guess: " + str(guess))
-        fitness = guess - goal
+        fitness = abs(guess - goal)                  # Calculate a fitness score based on the guess and the goal
         print("fitness: " + str(fitness))
-        population[i].append(fitness)
+        population[i].append(fitness)           # Appends the fitness score to after the chromosone data
+    return(revertFitness(population))                          # Returns the whole poplation list of lists.
+
+# Sorts the population from best to worst. Then Swaps the best chromosones fitness with the worst, the second best with the second worst etc. So a Roulette wheel selection is possible.
+def revertFitness(population):
+    fitness_index = len(population[0])-1        # Finds the index where the fitness score is stored
+    population = sorted(population, key=itemgetter(fitness_index))   # Sorts the whole population on the fitness_index. Lowest(best) fitness first.
+    # CREATE A COPY ONLY OF FITNESS
+    fitness_array = []
+    for i in range(0,len(population)):
+        fitness_array.append(population[i][fitness_index])
+    print(fitness_array)
+    # SWAP THE BEST FITNESS WITH WORST, SECOND BEST WITH SECOND WORST ETC. USE COPY ARRAY TO POINT BACKWARDS
+    for i in range(0,len(population)):
+        population[i][fitness_index] = fitness_array[-1-i]
     return(population)
+
+
+
 
 def decode(code):
     if(code == [0,0,0]):
