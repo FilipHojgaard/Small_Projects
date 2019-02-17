@@ -49,6 +49,7 @@ def random_chromosone(chromosone_length):
             chromosone.append(0)
     return(chromosone)
 
+# Select a parent. The chromosones with the highest fitness score has the highest probability of being choosen.
 def roulette_wheel_selection(population):
     fitness_sum = 0
     parent = []                                         # Allocate memory to a parent chromosone
@@ -71,6 +72,9 @@ def roulette_wheel_selection(population):
             break
         else:
             partial_sum += population[i][-1]
+    # If no parent was choosen, the worst chromosone is choosen.
+    if (parent == []):
+        parent = population[-1]
     return parent
 
 
