@@ -19,11 +19,11 @@ import sys
 def main():
     # VARIABLES
     goal = 30
-    population_amount = 100
+    population_amount = 500
     chromosone_length = 18
     cross_rate = 0.7
-    mutation_rate_probability = 5
-    max_generations = 200
+    mutation_rate_probability = 1
+    max_generations = 1000
 
     # GENETIC ALGORITHM
     population = create_population(population_amount, chromosone_length) # Creates a population of random chromosnes.
@@ -34,6 +34,7 @@ def main():
             newGen = new_generation(population, goal, population_amount, cross_rate, mutation_rate_probability)
         else:
             newGen = new_generation(newGen, goal, population_amount, cross_rate, mutation_rate_probability)
+        print("_________GENERATION " + str(generation_number) + " END__________")
 
 
 def new_generation(population, goal, population_amount, cross_rate, mutation_rate_probability):
@@ -46,7 +47,6 @@ def new_generation(population, goal, population_amount, cross_rate, mutation_rat
         child_1, child_2 = mutation_rate(child_1, child_2, mutation_rate_probability)
         new_generation.append(child_1)
         new_generation.append(child_2)
-    print("_________GENERATION END__________")
     return new_generation
 
 
