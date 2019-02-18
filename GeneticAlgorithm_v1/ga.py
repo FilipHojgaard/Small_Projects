@@ -18,9 +18,9 @@ import sys
 
 def main():
     # VARIABLES
-    goal = 24
+    goal = 30
     population_amount = 100
-    chromosone_length = 9
+    chromosone_length = 18
     cross_rate = 0.7
     mutation_rate_probability = 0.1
 
@@ -143,8 +143,15 @@ def test_chromosone(population, goal):
         A = decode(population[i][0:3])          # Find the decoded value of the first 3 bits of the chromosones
         B = decode(population[i][3:6])
         C = decode(population[i][6:9])
+        D = decode(population[i][9:12])          # Find the decoded value of the first 3 bits of the chromosones
+        E = decode(population[i][12:15])
+        F = decode(population[i][15:18])
         print(A,B,C)
-        guess = A*B+C                           # Calcuate the guess frmo the decoded chromosone information
+        try:
+            guess = int((A**B-C)/(D*E+F))                           # Calcuate the guess frmo the decoded chromosone information
+        except:
+            print("SKIPPED TEST: Division by 0")
+            guess = 0
         print("guess: " + str(guess))
         fitness = abs(guess - goal)                  # Calculate a fitness score based on the guess and the goal
         print("fitness: " + str(fitness))
@@ -194,7 +201,10 @@ def finnish(chromosone):
     A = decode(chromosone[0:3])          # Find the decoded value of the first 3 bits of the chromosones
     B = decode(chromosone[3:6])
     C = decode(chromosone[6:9])
-    print(str(A) + "*" + str(B) + "+" + str(C) + " = 24")
+    D = decode(chromosone[9:12])          # Find the decoded value of the first 3 bits of the chromosones
+    E = decode(chromosone[12:15])
+    F = decode(chromosone[15:18])
+    print("(" + str(A) + "^" + str(B) + "-" + str(C) + ") / (" + str(D) + "*" + str(E) + "+" + str(F) + ") = 30")
     sys.exit("EXITED WITH SUCCES")
 
 
