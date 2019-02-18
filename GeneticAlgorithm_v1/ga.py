@@ -26,10 +26,8 @@ def main():
     population = test_chromosone(population, goal) # Tests the population of chromosones and calculates a fitness score to each of them.
     parent_1 = roulette_wheel_selection(population)     # Find 2 parents in population using roulette_wheel_selection
     parent_2 = roulette_wheel_selection(population)
-    print("PARENTS:")
-    print(parent_1)
-    print(parent_2)
-    cross_over_rate(parent_1, parent_2)
+    child_1, child_2 = cross_over_rate(parent_1, parent_2)
+    mutation_rate(child_1, child_2)
 
 
 # Using the "random_chromosone" helping function. This function creates a population of 'amount' random chromosones with each being 'chromosone_length' long.
@@ -79,15 +77,28 @@ def roulette_wheel_selection(population):
     return parent
 
 def cross_over_rate(parent_1, parent_2):
+    child_1 = []
+    child_2 = []
     if (random.uniform(0,1) < 0.7):                     # If a random number between 0 and 1 is under 0,7 then we make a cross over
         swap_position = random.randint(0,len(parent_1)-2) # -2 since: -1(we dismiss the fitness score position) -1 (it doesnt make sense to swap after the last bit anyway) = -2
         print("CROSS OVER")
         print(swap_position)
+        child_1[:swap_position] = parent_1[:swap_position]
+        child_1[swap_position:] = parent_2[swap_position:]
+        child_2[:swap_position] = parent_2[:swap_position]
+        child_2[swap_position:] = parent_1[swap_position:]
+        print(child_1)
+        print(child_2)
+        return (child_1, child_2)
 
     else:
         print("NO CROSS OVER")
-        return [parent_1, parent_2]
+        return (parent_1, parent_2)
 
+def mutation_rate(child_1, child_2):
+    for child in range(0,2):
+        for i in range(0, len(child_1)):
+            pass
 
 
 def test_chromosone(population, goal):
