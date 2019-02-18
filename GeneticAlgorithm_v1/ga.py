@@ -22,18 +22,18 @@ def main():
     population_amount = 100
     chromosone_length = 18
     cross_rate = 0.7
-    mutation_rate_probability = 0.1
+    mutation_rate_probability = 1
+    max_generations = 10
 
     # GENETIC ALGORITHM
     population = create_population(population_amount, chromosone_length) # Creates a population of random chromosnes.
-    gen_1 = new_generation(population, goal, population_amount, cross_rate, mutation_rate_probability)
-    gen_2 = new_generation(gen_1, goal, population_amount, cross_rate, mutation_rate_probability)
-    gen_3 = new_generation(gen_2, goal, population_amount, cross_rate, mutation_rate_probability)
-    gen_4 = new_generation(gen_3, goal, population_amount, cross_rate, mutation_rate_probability)
-    gen_5 = new_generation(gen_4, goal, population_amount, cross_rate, mutation_rate_probability)
-    gen_6 = new_generation(gen_5, goal, population_amount, cross_rate, mutation_rate_probability)
-    gen_7 = new_generation(gen_6, goal, population_amount, cross_rate, mutation_rate_probability)
-    gen_8 = new_generation(gen_7, goal, population_amount, cross_rate, mutation_rate_probability)
+
+    # Generate generations looped over 'max_generations' of times, until either an answer is formed or we reach 'max_generations'
+    for generation_number in range(0,max_generations):
+        if(generation_number==0):
+            newGen = new_generation(population, goal, population_amount, cross_rate, mutation_rate_probability)
+        else:
+            newGen = new_generation(newGen, goal, population_amount, cross_rate, mutation_rate_probability)
 
 
 def new_generation(population, goal, population_amount, cross_rate, mutation_rate_probability):
