@@ -11,6 +11,7 @@ left_point = [100, 650]
 right_point = [600, 650]
 red_x = 500
 red_y = 70
+calculated_boat_coords = [0, 0]
 
 pygame.init()
 fpsClock = pygame.time.Clock()
@@ -59,12 +60,18 @@ while(True):
     adjecent = round((length_to_boat / tangent), 1)
     adjecent_text = myfont.render(str(adjecent)+" m", False, (0,0,0))
 
+    calculated_boat_coords = [left_point[0]+adjecent, left_point[1]-length_to_boat]
+    real_coords_text = myfont.render("actual: " +str(boat_coords), False, (0,0,0))
+    calculated_coords_text = myfont.render("calculated: "+str(calculated_boat_coords), False, (0,0,0))
+
     drawLine(boat_coords, [left_point[0]+adjecent, left_point[1]], (150,150,150), 2)
 
     windowsSurfaceObj.blit(left_angle_text,(left_point[0]-5,left_point[1]+8))
     windowsSurfaceObj.blit(right_angle_text,(right_point[0]-5,right_point[1]+8))
     windowsSurfaceObj.blit(length_to_boat_text,(boat_coords[0],(boat_coords[1]+(length_to_boat/2))))
     windowsSurfaceObj.blit(adjecent_text,(left_point[0]+(adjecent/2), left_point[1]-20))
+    windowsSurfaceObj.blit(real_coords_text,(5,5))
+    windowsSurfaceObj.blit(calculated_coords_text,(50,50))
 
 
     keystate = pygame.key.get_pressed()
