@@ -11,7 +11,7 @@ from operator import itemgetter # For sorting a list og list on a specific index
 # 1 1 0 = 6
 # 1 1 1 = 7
 
-# GOAL IS TO FIND SOLVE A ARITHMETIC EQUATION OF A*B+C = X.
+# GOAL IS TO FIND SOLVE A ARITHMETIC EQUATION OF (A^B-C)/(D*E+F) = X.
 # GOAL: X = 24
 # FINTESS: Answer - Goal = Fitness
 
