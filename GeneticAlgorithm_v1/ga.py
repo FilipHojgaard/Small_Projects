@@ -1,5 +1,6 @@
 import random
 from operator import itemgetter # For sorting a list og list on a specific index in the inner list
+import sys
 
 # CHROMOSONE ENCODING / DECODING MEANING:
 # 0 0 0 = 0
@@ -18,16 +19,36 @@ from operator import itemgetter # For sorting a list og list on a specific index
 def main():
     # VARIABLES
     goal = 24
-    population_amount = 4
+    population_amount = 100
     chromosone_length = 9
+    cross_rate = 0.7
+    mutation_rate_probability = 0.1
 
     # GENETIC ALGORITHM
     population = create_population(population_amount, chromosone_length) # Creates a population of random chromosnes.
+    gen_1 = new_generation(population, goal, population_amount, cross_rate, mutation_rate_probability)
+    gen_2 = new_generation(gen_1, goal, population_amount, cross_rate, mutation_rate_probability)
+    gen_3 = new_generation(gen_2, goal, population_amount, cross_rate, mutation_rate_probability)
+    gen_4 = new_generation(gen_3, goal, population_amount, cross_rate, mutation_rate_probability)
+    gen_5 = new_generation(gen_4, goal, population_amount, cross_rate, mutation_rate_probability)
+    gen_6 = new_generation(gen_5, goal, population_amount, cross_rate, mutation_rate_probability)
+    gen_7 = new_generation(gen_6, goal, population_amount, cross_rate, mutation_rate_probability)
+    gen_8 = new_generation(gen_7, goal, population_amount, cross_rate, mutation_rate_probability)
+
+
+def new_generation(population, goal, population_amount, cross_rate, mutation_rate_probability):
+    new_generation = []
     population = test_chromosone(population, goal) # Tests the population of chromosones and calculates a fitness score to each of them.
-    parent_1 = roulette_wheel_selection(population)     # Find 2 parents in population using roulette_wheel_selection
-    parent_2 = roulette_wheel_selection(population)
-    child_1, child_2 = cross_over_rate(parent_1, parent_2)
-    mutation_rate(child_1, child_2)
+    while(len(new_generation) < population_amount):
+        parent_1 = roulette_wheel_selection(population)     # Find 2 parents in population using roulette_wheel_selection
+        parent_2 = roulette_wheel_selection(population)
+        child_1, child_2 = cross_over_rate(parent_1, parent_2, cross_rate)
+        child_1, child_2 = mutation_rate(child_1, child_2, mutation_rate_probability)
+        new_generation.append(child_1)
+        new_generation.append(child_2)
+    print("_________GENERATION END__________")
+    return new_generation
+
 
 
 # Using the "random_chromosone" helping function. This function creates a population of 'amount' random chromosones with each being 'chromosone_length' long.
@@ -62,25 +83,23 @@ def roulette_wheel_selection(population):
         # If the partial_sum exceeds the fitness_sum. (Because the fixed_point is too close to fitness_sum, and is incremented too much)
         if(partial_sum >= fitness_sum):
             parent = population[i-1]
-            population.pop(i-1)
             break
         # When the threshold is found normally
         elif(partial_sum >= fixed_point):
             parent = population[i]                      # Sets parent to be the winner
-            population.pop(i)                           # Removes the parent frmo the population, so the same parent cant be choosen again.
             break
         else:
             partial_sum += population[i][-1]
     # If no parent was choosen, the worst chromosone is choosen.
     if (parent == []):
         parent = population[-1]
-    return parent
+    return parent[:-1]
 
-def cross_over_rate(parent_1, parent_2):
+def cross_over_rate(parent_1, parent_2, cross_rate):
     child_1 = []
     child_2 = []
-    if (random.uniform(0,1) < 0.7):                     # If a random number between 0 and 1 is under 0,7 then we make a cross over
-        swap_position = random.randint(0,len(parent_1)-2) # -2 since: -1(we dismiss the fitness score position) -1 (it doesnt make sense to swap after the last bit anyway) = -2
+    if (random.uniform(0,1) < cross_rate):                     # If a random number between 0 and 1 is under 0,7 then we make a cross over
+        swap_position = random.randint(0,len(parent_1)-1) # -2 since: -1(we dismiss the fitness score position) -1 (it doesnt make sense to swap after the last bit anyway) = -2
         print("CROSS OVER")
         print(swap_position)
         child_1[:swap_position] = parent_1[:swap_position]
@@ -95,10 +114,27 @@ def cross_over_rate(parent_1, parent_2):
         print("NO CROSS OVER")
         return (parent_1, parent_2)
 
-def mutation_rate(child_1, child_2):
-    for child in range(0,2):
-        for i in range(0, len(child_1)):
-            pass
+def mutation_rate(child_1, child_2, mutation_rate):
+    print("BEFORE MUTATION: ")
+    print(child_1)
+    print(child_2)
+    for i in range(0, len(child_1)):
+        mutation_change = 100/mutation_rate
+        if (random.randint(0,mutation_change) == 1):
+            if (child_1[i] == 0):
+                child_1[i] = 1
+            else:
+                child_1[i] = 0
+    for i in range(0, len(child_2)):
+        if (random.randint(0,100/mutation_rate) == 1):
+            if (child_2[i] == 0):
+                child_2[i] = 1
+            else:
+                child_2[i] = 0
+    print("AFTER MUTATION: ")
+    print(child_1)
+    print(child_2)
+    return (child_1, child_2)
 
 
 def test_chromosone(population, goal):
@@ -113,6 +149,8 @@ def test_chromosone(population, goal):
         fitness = abs(guess - goal)                  # Calculate a fitness score based on the guess and the goal
         print("fitness: " + str(fitness))
         population[i].append(fitness)           # Appends the fitness score to after the chromosone data
+        if (fitness == 0):
+            finnish(population[i])
     return(revertFitness(population))                          # Returns the whole poplation list of lists.
 
 # Sorts the population from best to worst. Then Swaps the best chromosones fitness with the worst, the second best with the second worst etc. So a Roulette wheel selection is possible.
@@ -128,9 +166,6 @@ def revertFitness(population):
     for i in range(0,len(population)):
         population[i][fitness_index] = fitness_array[-1-i]
     return(population)
-
-
-
 
 def decode(code):
     if(code == [0,0,0]):
@@ -153,7 +188,14 @@ def decode(code):
         print("ERROR: NO DECODE MATCH FOUND")
         return 99
 
-
+def finnish(chromosone):
+    print("WE HAVE AN ANSWER BY CHROMOSONE:")
+    print(chromosone)
+    A = decode(chromosone[0:3])          # Find the decoded value of the first 3 bits of the chromosones
+    B = decode(chromosone[3:6])
+    C = decode(chromosone[6:9])
+    print(str(A) + "*" + str(B) + "+" + str(C) + " = 24")
+    sys.exit("EXITED WITH SUCCES")
 
 
 if __name__ == "__main__":
