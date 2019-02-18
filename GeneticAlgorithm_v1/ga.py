@@ -22,8 +22,8 @@ def main():
     population_amount = 100
     chromosone_length = 18
     cross_rate = 0.7
-    mutation_rate_probability = 1
-    max_generations = 10
+    mutation_rate_probability = 5
+    max_generations = 200
 
     # GENETIC ALGORITHM
     population = create_population(population_amount, chromosone_length) # Creates a population of random chromosnes.
@@ -75,9 +75,7 @@ def roulette_wheel_selection(population):
     parent = []                                         # Allocate memory to a parent chromosone
     for i in range(0,len(population)):                  # Calculate a fitness sum from the whole population
         fitness_sum += population[i][-1]
-    print("fitness sum: " +str(fitness_sum))
     fixed_point = random.randint(0,fitness_sum)         # Generate a random fixed_point from 0 to the fitness sum
-    print("Random fixed point: " + str(fixed_point))
     partial_sum = 0                                     # Partial sum is added up. When this exceeds the threshold, fixed_point, we choose the current chromosone as a parent.
     for i in range(0,len(population)):
         # If the partial_sum exceeds the fitness_sum. (Because the fixed_point is too close to fitness_sum, and is incremented too much)
@@ -100,24 +98,16 @@ def cross_over_rate(parent_1, parent_2, cross_rate):
     child_2 = []
     if (random.uniform(0,1) < cross_rate):                     # If a random number between 0 and 1 is under 0,7 then we make a cross over
         swap_position = random.randint(0,len(parent_1)-1) # -2 since: -1(we dismiss the fitness score position) -1 (it doesnt make sense to swap after the last bit anyway) = -2
-        print("CROSS OVER")
-        print(swap_position)
         child_1[:swap_position] = parent_1[:swap_position]
         child_1[swap_position:] = parent_2[swap_position:]
         child_2[:swap_position] = parent_2[:swap_position]
         child_2[swap_position:] = parent_1[swap_position:]
-        print(child_1)
-        print(child_2)
         return (child_1, child_2)
 
     else:
-        print("NO CROSS OVER")
         return (parent_1, parent_2)
 
 def mutation_rate(child_1, child_2, mutation_rate):
-    print("BEFORE MUTATION: ")
-    print(child_1)
-    print(child_2)
     for i in range(0, len(child_1)):
         mutation_change = 100/mutation_rate
         if (random.randint(0,mutation_change) == 1):
@@ -131,9 +121,6 @@ def mutation_rate(child_1, child_2, mutation_rate):
                 child_2[i] = 1
             else:
                 child_2[i] = 0
-    print("AFTER MUTATION: ")
-    print(child_1)
-    print(child_2)
     return (child_1, child_2)
 
 
@@ -196,7 +183,7 @@ def decode(code):
         return 99
 
 def finnish(chromosone):
-    print("WE HAVE AN ANSWER BY CHROMOSONE:")
+    print("WE HAVE A WINNER CHROMOSONE:")
     print(chromosone)
     A = decode(chromosone[0:3])          # Find the decoded value of the first 3 bits of the chromosones
     B = decode(chromosone[3:6])
