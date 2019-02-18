@@ -1,7 +1,7 @@
 import random
 from operator import itemgetter # For sorting a list og list on a specific index in the inner list
 
-# CHROMOSONE ENCOTION / DECOTION MEANING:
+# CHROMOSONE ENCODING / DECODING MEANING:
 # 0 0 0 = 0
 # 0 0 1 = 1
 # 0 1 0 = 2
@@ -29,6 +29,7 @@ def main():
     print("PARENTS:")
     print(parent_1)
     print(parent_2)
+    cross_over_rate(parent_1, parent_2)
 
 
 # Using the "random_chromosone" helping function. This function creates a population of 'amount' random chromosones with each being 'chromosone_length' long.
@@ -42,7 +43,7 @@ def create_population(amount, chromosone_length):
 def random_chromosone(chromosone_length):
     chromosone = []
     for x in range(chromosone_length):
-        temp = random.randint(1,101)
+        temp = random.randint(0,100)
         if (temp > 50):
             chromosone.append(1)
         else:
@@ -77,7 +78,15 @@ def roulette_wheel_selection(population):
         parent = population[-1]
     return parent
 
+def cross_over_rate(parent_1, parent_2):
+    if (random.uniform(0,1) < 0.7):                     # If a random number between 0 and 1 is under 0,7 then we make a cross over
+        swap_position = random.randint(0,len(parent_1)-2) # -2 since: -1(we dismiss the fitness score position) -1 (it doesnt make sense to swap after the last bit anyway) = -2
+        print("CROSS OVER")
+        print(swap_position)
 
+    else:
+        print("NO CROSS OVER")
+        return [parent_1, parent_2]
 
 
 
