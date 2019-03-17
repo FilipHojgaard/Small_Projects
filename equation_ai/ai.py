@@ -19,6 +19,10 @@ maxGens = 0
 
 # API FUNCTION
 def EVOLVE(equation, arg_goal, arg_popSize, arg_mutRate, arg_maxGens):
+    global goal
+    global popSize
+    global mutRate
+    global maxGens
     goal = arg_goal
     popSize = arg_popSize
     mutRate = arg_mutRate
