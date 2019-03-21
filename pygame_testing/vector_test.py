@@ -10,13 +10,12 @@ pygame.init()
 fpsClock = pygame.time.Clock()
 
 FPS = 30
-RESOLUTION = (640, 480)
+RESOLUTION = (1920, 1080)
 GREEN = pygame.Color(0,255,0)
 WHITE = pygame.Color(255,255,255)
 
-windowSurfaceObj = pygame.display.set_mode(RESOLUTION)
+windowSurfaceObj = pygame.display.set_mode(RESOLUTION, pygame.FULLSCREEN)
 pygame.display.set_caption('vector testing')
-
 
 
 class Ball():
@@ -24,12 +23,22 @@ class Ball():
     size = 20
     pos = Vector2(200,200)
     vel = Vector2(0,0)
+    Rcolor = 0
+    Gcolor = 0
+    Bcolor = 0
+    color = 0
+
+
 
     def __init__(self, *args):
         if (len(args) > 0):
             print("Bold lavet")
             self.pos = args[0]
             self.vel = Vector2(random.randint(-2,2), random.randint(-2,2))
+            self.Rcolor = random.randint(0,255)
+            self.Gcolor = random.randint(0,255)
+            self.Bcolor = random.randint(0,255)
+            self.color = pygame.Color(self.Rcolor,self.Gcolor,self.Bcolor)
 
     def random_speed(self):
         self.vel = Vector2(random.randint(-2,2), random.randint(-2,2))
@@ -63,10 +72,13 @@ while True:
                 balls.append(Ball())
             if event.key == K_n:
                 print(f"Number of balls: {len(balls)}")
+            if event.key == K_ESCAPE:
+                pygame.quit()
+                sys.exit()
 
     for i in range(0, len(balls)):
         balls[i].update()
-        pygame.draw.circle(windowSurfaceObj, GREEN, (int(balls[i].pos[0]), int(balls[i].pos[1])), balls[i].size)
+        pygame.draw.circle(windowSurfaceObj, balls[i].color, (int(balls[i].pos[0]), int(balls[i].pos[1])), balls[i].size)
 
 
     pygame.display.update()
