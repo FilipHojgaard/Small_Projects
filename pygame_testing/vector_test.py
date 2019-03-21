@@ -21,7 +21,7 @@ pygame.display.set_caption('vector testing')
 
 class Ball():
     # Attributes
-    size = 50
+    size = 20
     pos = Vector2(200,200)
     vel = Vector2(0,0)
 
@@ -29,13 +29,14 @@ class Ball():
         if (len(args) > 0):
             print("Bold lavet")
             self.pos = args[0]
+            self.vel = Vector2(random.randint(-2,2), random.randint(-2,2))
 
     def random_speed(self):
-        self.vel = Vector2(random.randint(0,4), random.randint(0,4))
+        self.vel = Vector2(random.randint(-2,2), random.randint(-2,2))
 
     def update(self):
-        print(type((self.pos)[0]))
-        # self.pos += self.vel
+        print(type((self.vel)[0]))
+        self.pos += self.vel
 
 balls = []
 while True:
@@ -65,7 +66,7 @@ while True:
 
     for i in range(0, len(balls)):
         balls[i].update()
-        pygame.draw.circle(windowSurfaceObj, GREEN, balls[i].pos, balls[i].size)
+        pygame.draw.circle(windowSurfaceObj, GREEN, (int(balls[i].pos[0]), int(balls[i].pos[1])), balls[i].size)
 
 
     pygame.display.update()
