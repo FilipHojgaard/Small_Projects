@@ -28,8 +28,6 @@ class Ball():
     Bcolor = 0
     color = 0
 
-
-
     def __init__(self, *args):
         if (len(args) > 0):
             print("Bold lavet")
@@ -69,12 +67,16 @@ while True:
         elif event.type == KEYDOWN:
             if event.key == K_SPACE:
                 print("Space trykket")
-                balls.append(Ball())
+                for i in range(0,100):
+                    balls.append(Ball(Vector2(random.randint(0,RESOLUTION[0]), random.randint(0,RESOLUTION[1]))))
             if event.key == K_n:
                 print(f"Number of balls: {len(balls)}")
             if event.key == K_ESCAPE:
                 pygame.quit()
                 sys.exit()
+            if event.key == K_r:
+                print("RESET")
+                del balls[:]
 
     for i in range(0, len(balls)):
         balls[i].update()
