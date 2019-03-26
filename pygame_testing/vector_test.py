@@ -44,6 +44,7 @@ class Ball():
             self.Gcolor = random.randint(0,255)
             self.Bcolor = random.randint(0,255)
             self.color = pygame.Color(self.Rcolor,self.Gcolor,self.Bcolor)
+            # self.toggleGravity() # Start out with gravity
 
     def collision(self):
         if (self.pos[0] < 0-self.size) or (self.pos[0] > RESOLUTION[0]+self.size) or (self.pos[1]) < 0-self.size or (self.pos[1] > RESOLUTION[1]+self.size):
