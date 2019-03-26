@@ -25,6 +25,8 @@ class Ball():
     size = 20
     pos = Vector2(200,200)
     vel = Vector2(0,0)
+    gravity = 0
+    gravity_reference = 0.5
     Rcolor = 0
     Gcolor = 0
     Bcolor = 0
@@ -47,10 +49,17 @@ class Ball():
         if (self.pos[0] < 0-self.size) or (self.pos[0] > RESOLUTION[0]+self.size) or (self.pos[1]) < 0-self.size or (self.pos[1] > RESOLUTION[1]+self.size):
             return True
 
+    def toggleGravity(self):
+        if self.gravity == 0:
+            self.gravity = self.gravity_reference
+        else:
+            self.gravity = 0
+
     def random_speed(self):
         self.vel = Vector2(random.randint(-2,2), random.randint(-2,2))
 
     def update(self):
+        self.vel[1] += self.gravity
         self.pos += self.vel
 
 balls = []
@@ -64,27 +73,25 @@ while True:
 
         elif event.type == MOUSEBUTTONUP:
             if event.button == 1:
-                print(f"Museklik på {event.pos}")
                 balls.append(Ball(event.pos))
             if event.button == 3:
                 for i in range(0, len(balls)):
                     if(Vector2(event.pos).distance_to(balls[i].pos) <= balls[i].size):
-                        print("COLLISION DETECTED")
                         balls[i].random_speed()
 
         elif event.type == KEYDOWN:
             if event.key == K_SPACE:
-                print("Space trykket")
                 for i in range(0,100):
                     balls.append(Ball(Vector2(random.randint(0,RESOLUTION[0]), random.randint(0,RESOLUTION[1]))))
-            if event.key == K_n:
-                print(f"Number of balls: {len(balls)}")
             if event.key == K_ESCAPE:
                 pygame.quit()
                 sys.exit()
             if event.key == K_r:
-                print("RESET")
                 del balls[:]
+            if event.key == K_g:
+                for i in range(0, len(balls)):
+                    balls[i].toggleGravity()
+
 
 
 
