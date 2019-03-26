@@ -15,4 +15,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             data = conn.recv(1024)
             if not(data):
                 break
+            if (data.decode('utf-8').isdigit()):
+                number = int(data.decode('utf-8'))
+                number *= 2
+                data = str.encode(str(number))
             conn.sendall(data)
