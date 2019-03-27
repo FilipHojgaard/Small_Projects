@@ -22,15 +22,20 @@ pygame.display.set_caption('Rotation test')
 
 
 class Player():
-    moving = False
-    size = 20
-    speed = 6
-    position = Vector2(200,200)
-    direction = Vector2(1,0)
-    velocity = Vector2(0,0)
-    color = pygame.Color(0,0,255)
 
     def __init__(self, *args):
+        self.moving = False
+        self.size = 20
+        self.speed = 6
+        self.position = Vector2(200,200)
+        self.direction = Vector2(1,0)
+        self.velocity = Vector2(0,0)
+        self.color = pygame.Color(100,100,100)
+        if (len(args)) > 0:
+            if (args[0]) == 'red':
+                self.color = pygame.Color(255,0,0)
+            elif (args[0]) == 'blue':
+                self.color = pygame.Color(0,0,255)
         print("Player created")
 
     def rotate_player(self, *args):
@@ -55,8 +60,8 @@ class Player():
         self.position += self.velocity * self.speed
 
 
-player = Player()
-
+player = Player('blue')
+player_red = Player('red')
 
 while True:
     windowSurfaceObj.fill(WHITE)
@@ -82,10 +87,22 @@ while True:
         player.rotate_player('right')
     if keys[pygame.K_LEFT]:
         player.rotate_player('left')
+    if keys[pygame.K_w]:
+        player_red.forward()
+    elif keys[pygame.K_s]:
+        player_red.reverse()
+    else:
+        player_red.break_player()
+    if keys[pygame.K_d]:
+        player_red.rotate_player('right')
+    if keys[pygame.K_a]:
+        player_red.rotate_player('left')
 
 
     player.update()
+    player_red.update()
     pygame.draw.circle(windowSurfaceObj, player.color, (int(player.position[0]), int(player.position[1])), player.size)
+    pygame.draw.circle(windowSurfaceObj, player_red.color, (int(player_red.position[0])+200, int(player_red.position[1])), player_red.size)
 
     pygame.display.update()
     fpsClock.tick(FPS)
